@@ -14,9 +14,21 @@
     <title>Advanced Dashboard Charts</title>
   </head>
   <body>
+    <div class="form">
+      <p>Scegli il tuo livello: </p>
+      <select id="venditore">
+        <option value="guest">Guest</option>
+        <option value="employee">Employee</option>
+        <option value="clevel">Clevel</option>
+      </select>
+      <button id="aggiorna">Accedi</button>
+    </div>
+
     <div class="container">
       <canvas id="myChartline"></canvas>
+      <canvas id="myChartpie"></canvas>
     </div>
+    
 
     <!-- JS: CHART JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
