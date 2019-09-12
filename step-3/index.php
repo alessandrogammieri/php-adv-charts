@@ -25,11 +25,9 @@
     </div>
 
     <div class="container">
-      <canvas id="myChartline"></canvas>
-      <canvas id="myChartpie"></canvas>
+      
     </div>
     
-
     <!-- JS: CHART JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
     <!-- JS: JQUERY -->
