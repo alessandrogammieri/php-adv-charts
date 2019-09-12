@@ -7,9 +7,12 @@ function init() {
 
 // Funzione che richiama l'AJAX e costruisce i grafici
 function printGrafs () {
+    // Puliamo il container ogni volta che facciamo una chiamata
     $(".container").empty();
+    // Assegno ad una variabile l'accesso scelto e salvo nella var query che invio al PHP
     var valquery = $("#venditore").val();
     var query = {"level": valquery};
+    // Chiamata AJAX dal PHP api
     $.ajax({
         url: "api.php",
         method: "GET",
@@ -19,9 +22,9 @@ function printGrafs () {
                 var element = data[i];
             }
             if (element.access == "guest") {
-                lineGraf(data);
+                guestGraf(data);
             } else if (element.access == "employee") {
-                linepieGraf(data);
+                employeeGraf(data);
             } else {
                 clevelGraf(data); 
             }    
@@ -32,74 +35,21 @@ function printGrafs () {
     })
 }
 
-// Stampa Line Graf
-function lineGraf(data) {  
-    for (i = 0; i < data.length; i++) {
-        var element = data[i];
-    }
-    // Dichiaro una variabile che mi ritorna la tipologia di grafico
-    var line = element.type;
-    // Dichiaro una variabile con i profitti
-    var monthProfit = element.data;
+// Stampa Line Graf (Guest)
+function guestGraf(data) {  
     // Richiamo la funzione che mi ritorna i mesi in una variabile
     var getMonths = getMonth ();
-    // Appendo il Canvas nel DOM
-    var tema = '<canvas id="myChartline"></canvas>';
-    $(".container").append(tema);
-    // Creating a Chart
-    var ctx = document.getElementById('myChartline').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: line,
-        data: {
-            labels: getMonths,
-            datasets: [{
-                label: '# Vendite',
-                data: monthProfit,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
+    for (i = 0; i < data.length; i++) {
+        var element = data[i];
+        // Dichiaro una variabile con i profitti
+        var monthProfit = element.data;
+    }
+    // Richiamo la funzione che stampa il grafico a linee
+    line (getMonths, monthProfit);
 }
 
-// Stampa Line e Pie Graf
-function linepieGraf(data) { 
+// Stampa Line e Pie Graf (Employee)
+function employeeGraf(data) { 
     // Richiamo la funzione che mi ritorna i mesi in una variabile
     var getMonths = getMonth ();
     // Ciclo una sola volta per avere i dati del primo array
@@ -107,6 +57,7 @@ function linepieGraf(data) {
         var element = data[i];
         // Dichiaro una variabile che mi ritorna i relativi profitti
         var profit = Object.values(element.data);
+        // Richiamo la funzione che stampa il grafico a linee
         line (getMonths, profit);
     }
     // Ciclo per avere i dati del secondo array
@@ -116,6 +67,7 @@ function linepieGraf(data) {
         var seller = Object.keys(element.data);
         // Dichiaro una variabile che mi ritorna i relativi profitti
         var profit = Object.values(element.data);
+        // Richiamo la funzione che stampa il grafico a torta
         pie (seller, profit)
     }  
 }
@@ -128,22 +80,20 @@ function clevelGraf(data) {
     for (x = 0; x < data.length; x++) {
         var element = data[x];
     }
-    // Stampo il primo grafico
+    // Stampo il primo grafico a linee
     var fatturato = element.fatturato.data;
     line (getMonths, fatturato);
-
     // Dichiaro una variabile che mi ritorna i nomi dei Seller
     var seller = Object.keys(element.fatturato_by_agent.data);
     // Dichiaro una variabile che mi ritorna i relativi profitti
     var profit = Object.values(element.fatturato_by_agent.data); 
-    // Stampo il secondo grafico
+    // Stampo il secondo grafico a torta
     pie (seller, profit);
-
     // Dichiaro una variabile che mi ritorna i dati dei Team
     var uno = element.team_efficiency.data.Team1;
     var due = element.team_efficiency.data.Team2;
     var tre = element.team_efficiency.data.Team3;
-    // Stampo il terzo grafico
+    // Stampo il terzo grafico a linee
     lineTeam (getMonths,uno, due, tre)
 }
 
@@ -250,7 +200,7 @@ function pie (x, y) {
     });
 }
 
-// Grafico a Linea dei team
+// Grafico a Linea dei Team
 function lineTeam (y, uno, due, tre) {  
     // Appendo il Canvas nel DOM
     var tema = '<canvas id="myChartteam"></canvas>';
@@ -299,6 +249,5 @@ function lineTeam (y, uno, due, tre) {
         }
     });
 }
-
 
 $(document).ready(init);
