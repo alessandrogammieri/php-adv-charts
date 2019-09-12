@@ -1,5 +1,6 @@
 # php-adv-charts
-Advanced Dashboard Charts
+
+ADVANCED DASHBOARD CHARTS
 
 Tecnologie da utilizzare e architettura:
 Creiamo una dashboard di grafici, la parte frontend deve utilizzare HTML e Javascript utilizzando la libreria ChartJS.
